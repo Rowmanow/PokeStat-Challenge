@@ -1,0 +1,10 @@
+POKÉSTAT CHALLENGE
+
+Organisation :
+- accueil.py : accueil, choix de langue et navigation entre les modes
+- mode_draft.py : mode Draft de Stats
+- mode_guesser.py : mode Stat Guesser
+- Pokestat-Challenge.vbs : lanceur silencieux Windows
+
+Les dossiers assets et cache doivent rester dans le même dossier.
+Pour lancer l'application, double-cliquez sur Pokestat-Challenge.vbs.
