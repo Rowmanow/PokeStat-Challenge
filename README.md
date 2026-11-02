@@ -1,5 +1,16 @@
 # PokeStat Challenge
 
+## Télécharger PokeStat Challenge
+
+Les fichiers prêts à installer sont disponibles dans la page suivante :
+
+### https://github.com/Rowmanow/PokeStat-Challenge/releases/latest
+
+- **Android** : téléchargez le fichier `.apk`
+- **Windows** : téléchargez l’archive `.zip`
+
+> N’utilisez pas les archives automatiques `Source code`, car elles ne correspondent pas aux versions prêtes à lancer.
+
 Jeu de statistiques disponible sur **Android** et **Windows** avec deux modes.
 
 ## Stat Draft
