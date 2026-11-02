@@ -131,6 +131,7 @@ Après chaque essai, les bornes minimales et maximales sont actualisées pour gu
   <img src="screenshots/Windows-Recapitulatif.png" alt="Récapitulatif Windows" width="23%">
   <img src="screenshots/Windows-Guesser.png" alt="Stat Guesser Windows" width="23%">
 </p>
+
 ---
 
 ## Signaler un problème
