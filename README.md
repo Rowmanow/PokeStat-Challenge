@@ -114,6 +114,26 @@ Après chaque essai, les bornes minimales et maximales sont actualisées pour gu
 
 ---
 
+## Aperçu
+
+### Accueil
+
+screenshots/Android-Accueil.jpg
+
+### Stat Draft
+
+screenshots/Android-Draft.jpg
+
+### Récapitulatif du Draft
+
+screenshots/Android-Recapitulatif.jpg
+
+### Stat Guesser
+
+screenshots/Android-Guesser.jpg
+
+---
+
 ## Signaler un problème
 
 Utilisez l'onglet **Issues** :
