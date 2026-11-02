@@ -114,24 +114,23 @@ Après chaque essai, les bornes minimales et maximales sont actualisées pour gu
 
 ---
 
-## Aperçu
+### Aperçu Android
 
-### Accueil
+<p align="center">
+  <img src="screenshots/Android-Accueil.jpg" alt="Accueil Android" width="23%">
+  <img src="screenshots/Android-Draft.jpg" alt="Stat Draft Android" width="23%">
+  <img src="screenshots/Android-Recapitulatif.jpg" alt="Récapitulatif Android" width="23%">
+  <img src="screenshots/Android-Guesser.jpg" alt="Stat Guesser Android" width="23%">
+</p>
 
-screenshots/Android-Accueil.jpg
+### Aperçu Windows
 
-### Stat Draft
-
-screenshots/Android-Draft.jpg
-
-### Récapitulatif du Draft
-
-screenshots/Android-Recapitulatif.jpg
-
-### Stat Guesser
-
-screenshots/Android-Guesser.jpg
-
+<p align="center">
+  <img src="screenshots/Windows-Accueil.png" alt="Accueil Windows" width="23%">
+  <img src="screenshots/Windows-Draft.png" alt="Stat Draft Windows" width="23%">
+  <img src="screenshots/Windows-Recapitulatif.png" alt="Récapitulatif Windows" width="23%">
+  <img src="screenshots/Windows-Guesser.png" alt="Stat Guesser Windows" width="23%">
+</p>
 ---
 
 ## Signaler un problème
