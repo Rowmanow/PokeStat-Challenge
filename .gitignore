@@ -104,3 +104,10 @@ windows/erreur_lancement_pc.txt
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Fichiers locaux de la version Windows
+windows/cache/
+windows/save/
+windows/__pycache__/
+windows/erreur_lancement.txt
+windows/erreur_lancement_pc.txt
