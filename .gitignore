@@ -1,4 +1,7 @@
-# Clés de signature et certificats
+# =========================================================
+# CLÉS DE SIGNATURE ET CERTIFICATS
+# =========================================================
+
 *.jks
 *.keystore
 *.p12
@@ -10,35 +13,91 @@ signing.properties
 keystore.properties
 local.properties
 
-# Paquets Android générés
+
+# =========================================================
+# PAQUETS ANDROID GÉNÉRÉS
+# =========================================================
+
 *.apk
 *.aab
 *.apks
 
-# Dossiers de compilation Android
+
+# =========================================================
+# COMPILATION ANDROID / BUILDOZER
+# =========================================================
+
 .buildozer/
 bin/
 Buildfinal/
-release/
 
-# Environnements Python
+
+# =========================================================
+# COMPILATION WINDOWS / PYINSTALLER
+# =========================================================
+
+build/
+dist/
+release/
+*.spec
+
+
+# =========================================================
+# ENVIRONNEMENTS PYTHON
+# =========================================================
+
 .venv/
 venv/
 env/
 
-# Cache Python
+
+# =========================================================
+# CACHE PYTHON
+# =========================================================
+
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 
-# Cache de l’application
+
+# =========================================================
+# DONNÉES LOCALES DE POKÉSTAT CHALLENGE
+# =========================================================
+
+# Cache PokéAPI et illustrations téléchargées
 cache/
 
-# Journaux et fichiers de diagnostic
-*.log
-erreur_lancement.txt
-windows/erreur_lancement.txt
+# Sauvegardes et préférences propres à chaque utilisateur
+save/
 
-# Fichiers système
+
+# =========================================================
+# JOURNAUX ET DIAGNOSTICS
+# =========================================================
+
+*.log
+
+erreur_lancement.txt
+erreur_lancement_pc.txt
+erreur_pokestat_challenge.txt
+
+windows/erreur_lancement.txt
+windows/erreur_lancement_pc.txt
+
+
+# =========================================================
+# ÉDITEURS
+# =========================================================
+
+.vscode/
+.idea/
+
+
+# =========================================================
+# FICHIERS SYSTÈME
+# =========================================================
+
 .DS_Store
 Thumbs.db
+Desktop.ini
