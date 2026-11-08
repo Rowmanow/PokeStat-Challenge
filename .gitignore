@@ -14,3 +14,4 @@ cache/
 local.properties
 release/
 windows/erreur_lancement.txt
+signing.properties
