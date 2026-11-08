@@ -71,6 +71,9 @@ cache/
 # Sauvegardes et préférences propres à chaque utilisateur
 save/
 
+# Sauvegardes locales du code
+/save/
+
 
 # =========================================================
 # JOURNAUX ET DIAGNOSTICS
