@@ -5,8 +5,8 @@ package.domain = fr.pokestat
 source.dir = .
 source.include_exts = py,png,jpg,jpeg,json,kv,ttf
 icon.filename = assets/pokestat_icon.png
-version = 1.0
-requirements = python3,kivy,certifi
+version = 1.0.3
+requirements = python3==3.13.18,hostpython3==3.13.18,kivy==2.3.1,certifi
 orientation = portrait
 fullscreen = 0
 android.permissions = INTERNET

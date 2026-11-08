@@ -46,15 +46,19 @@ def base_gen(name):
  return 9
 
 def settings(obj):
- if not hasattr(obj,"gens"):obj.gens=set(range(1,10));obj.types=set(TYPE_KEYS);obj.forms={"standard","mega","alola","galar","hisui","paldea"}
+ if not hasattr(obj,"gens"):
+  obj.gens=set(range(1,10));obj.types=set(TYPE_KEYS);obj.forms={"standard","mega","regional"}
 def candidates(obj):
  cat=standard_catalog();out=[]
  if "standard" in obj.forms:
   for i,n in enumerate(cat,1):
    if any(a<=i<=b and g in obj.gens for g,(a,b) in GEN_RANGES.items()):out.append(n)
- if "mega" in obj.forms:out += [n for n in MEGA if base_gen(n) in obj.gens]
- for form,names in REGIONAL.items():
-  if form in obj.forms and FORM_GEN[form] in obj.gens:out+=names
+ if "mega" in obj.forms:
+  # Dynamic Mega pool: classic forms plus new X, Y and Z forms from PokéAPI.
+  out += [n for n in cat if "-mega" in n and base_gen(n) in obj.gens]
+ if "regional" in obj.forms:
+  for form,names in REGIONAL.items():
+   if FORM_GEN[form] in obj.gens:out+=names
  if obj.types!=set(TYPE_KEYS):
   allowed=set()
   for t in obj.types:allowed|=type_names(t)
@@ -76,7 +80,7 @@ def filter_text(kind, values):
   return ("TYPES : TOUS" if lang()=="fr" else "TYPES : ALL") if len(values) == len(TYPE_KEYS) else f"TYPES : {len(values)}"
  if kind == "gens":
   return (("GÉN. : TOUT" if lang()=="fr" else "GEN. : ALL") if len(values) == 9 else (("GÉN. : " if lang()=="fr" else "GEN. : ") + ",".join(str(x) for x in sorted(values))))
- return ("FORMES : TOUT" if lang()=="fr" else "FORMS : ALL") if len(values) == 6 else (("FORMES" if lang()=="fr" else "FORMS") + f" : {len(values)}")
+ return ("FORMES : TOUT" if lang()=="fr" else "FORMS : ALL") if len(values) == 3 else (("FORMES" if lang()=="fr" else "FORMS") + f" : {len(values)}")
 
 def refresh_filter_buttons(screen):
  if hasattr(screen, "type_btn"):
@@ -103,7 +107,11 @@ class FilterMixin:
  def pick_gens(self,*_):
   check_popup("Générations" if lang()=="fr" else "Generations",[(g,(f"Génération {g}" if lang()=="fr" else f"Generation {g}")) for g in range(1,10)],self.gens,lambda v:self._save_filter("gens",v))
  def pick_forms(self,*_):
-  items=[("standard","Standards"),("mega","Méga" if lang()=="fr" else "Mega"),("alola","Alola"),("galar","Galar"),("hisui","Hisui"),("paldea","Paldea")]
+  items=[
+   ("standard","Standards" if lang()=="fr" else "Standard"),
+   ("mega","Méga" if lang()=="fr" else "Mega"),
+   ("regional","Régionales" if lang()=="fr" else "Regional"),
+  ]
   check_popup("Formes" if lang()=="fr" else "Forms",items,self.forms,lambda v:self._save_filter("forms",v))
 
 class HomeScreen(Screen):
@@ -146,7 +154,7 @@ class HomeScreen(Screen):
   guess_desc="Retrouve les 6 statistiques du Pokémon" if lang()=="fr" else "Guess all 6 stats of the Pokémon"
   root.add_widget(self.mode_card(guess_title,guess_desc,lambda *_:setattr(self.manager,"current","guesser"),COLORS["blue"]))
 
-  root.add_widget(Label(text="VERSION 1.0",font_size="13sp",bold=True,color=(.45,.55,.72,1),size_hint_y=.07))
+  root.add_widget(Label(text="VERSION 1.0.3",font_size="13sp",bold=True,color=(.45,.55,.72,1),size_hint_y=.07))
   self.add_widget(root)
 
 class GuesserScreen(FilterMixin,Screen):
@@ -217,12 +225,17 @@ class DraftScreen(FilterMixin,Screen):
  def refresh_texts(self):
   if self.manager and self.manager.current==self.name:self.draw()
  def draw(self):
-  self.clear_widgets();self.current=None;self.chosen={};self.used=set();self.encountered=[];r=BoxLayout(orientation="vertical",padding=dp(10),spacing=dp(4));top=BoxLayout(size_hint_y=None,height=dp(42));top.add_widget(btn("< "+tr("home"),lambda *_:setattr(self.manager,"current","home"),h=42));top.add_widget(Label(text="DRAFT",bold=True));r.add_widget(top);r.add_widget(filter_row(self));c=BoxLayout(size_hint_y=None,height=dp(45),spacing=dp(4));self.modebtn=btn((("AU-DESSUS" if self.mode=="above" else "EN DESSOUS") if lang()=="fr" else ("ABOVE" if self.mode=="above" else "BELOW")),self.toggle,COLORS["blue"],45);c.add_widget(self.modebtn);self.target=num("600");c.add_widget(self.target);c.add_widget(btn("LANCER" if lang()=="fr" else "START",self.start,COLORS["green"],45));r.add_widget(c);self.total=Label(text="TOTAL : 0",bold=True,size_hint_y=None,height=dp(30));r.add_widget(self.total);self.pname=Label(text=tr("ready"),font_size="21sp",bold=True,size_hint_y=None,height=dp(38));r.add_widget(self.pname);self.art=AsyncImage(size_hint_y=.28);r.add_widget(self.art);self.info=Label(text="Choisis une statistique" if lang()=="fr" else "Choose a stat",size_hint_y=None,height=dp(28));r.add_widget(self.info);g=GridLayout(cols=2,spacing=dp(3),size_hint_y=.5);self.vl={};self.bs={}
+  self.clear_widgets();self.current=None;self.chosen={};self.used=set();self.encountered=[];r=BoxLayout(orientation="vertical",padding=dp(10),spacing=dp(4));top=BoxLayout(size_hint_y=None,height=dp(42));top.add_widget(btn("< "+tr("home"),lambda *_:setattr(self.manager,"current","home"),h=42));top.add_widget(Label(text="DRAFT",bold=True));r.add_widget(top);r.add_widget(filter_row(self));c=BoxLayout(size_hint_y=None,height=dp(45),spacing=dp(4));self.modebtn=btn(self.mode_text(),self.toggle,COLORS["blue"],45);c.add_widget(self.modebtn);self.target=num("600");c.add_widget(self.target);c.add_widget(btn("LANCER" if lang()=="fr" else "START",self.start,COLORS["green"],45));r.add_widget(c);self.total=Label(text="TOTAL : 0",bold=True,size_hint_y=None,height=dp(30));r.add_widget(self.total);self.pname=Label(text=tr("ready"),font_size="21sp",bold=True,size_hint_y=None,height=dp(38));r.add_widget(self.pname);self.art=AsyncImage(size_hint_y=.28);r.add_widget(self.art);self.info=Label(text="Choisis une statistique" if lang()=="fr" else "Choose a stat",size_hint_y=None,height=dp(28));r.add_widget(self.info);g=GridLayout(cols=2,spacing=dp(3),size_hint_y=.5);self.vl={};self.bs={}
   for k in STAT_ORDER:self.vl[k]=Label(text=f"{sl(k)} : —");g.add_widget(self.vl[k]);self.bs[k]=btn("CHOISIR" if lang()=="fr" else "CHOOSE",lambda *_a,key=k:self.choose(key),COLORS["blue"],40);self.bs[k].disabled=True;g.add_widget(self.bs[k])
   r.add_widget(g);self.progress=Label(text="0 / 6",size_hint_y=None,height=dp(28));r.add_widget(self.progress);self.add_widget(r)
+ def mode_text(self):
+  if self.mode=="closest":return tr("closest")
+  if lang()=="fr":return "AU-DESSUS" if self.mode=="above" else "EN DESSOUS"
+  return "ABOVE" if self.mode=="above" else "BELOW"
  def toggle(self,*_):
-  self.mode="below" if self.mode=="above" else "above"
-  self.modebtn.text=(("EN DESSOUS" if self.mode=="below" else "AU-DESSUS") if lang()=="fr" else ("BELOW" if self.mode=="below" else "ABOVE"))
+  order=("above","below","closest")
+  self.mode=order[(order.index(self.mode)+1)%len(order)]
+  self.modebtn.text=self.mode_text()
  def start(self,*_):
   try:self.goal=max(1,int(self.target.text or 600))
   except:self.goal=600
@@ -248,7 +261,10 @@ class DraftScreen(FilterMixin,Screen):
   self.chosen[k]=entry;self.encountered.append(entry)
   total=sum(x["value"] for x in self.chosen.values());self.total.text=f"TOTAL : {total}";self.progress.text=f"{len(self.chosen)} / 6";self.vl[k].text=f"{sl(k)} : {entry['value']}"
   if len(self.chosen)==6:
-   win=total>=self.goal if self.mode=="above" else total<=self.goal;self.info.text=(("VICTOIRE !" if win else "DÉFAITE") if lang()=="fr" else ("VICTORY!" if win else "DEFEAT"))
+   if self.mode=="closest":
+    gap=abs(total-self.goal);win=gap<=20;self.info.text=tr("closest_win" if win else "closest_lose",gap=gap)
+   else:
+    win=total>=self.goal if self.mode=="above" else total<=self.goal;self.info.text=(("VICTOIRE !" if win else "DÉFAITE") if lang()=="fr" else ("VICTORY!" if win else "DEFEAT"))
    for b in self.bs.values():b.disabled=True
    Clock.schedule_once(lambda _dt:self.show_recap(),.35)
   else:self.next()
@@ -257,12 +273,13 @@ class DraftScreen(FilterMixin,Screen):
   players=list(self.encountered);best_perm=None;best_total=None
   for perm in itertools.permutations(STAT_ORDER):
    score=sum(players[i]["stats"][perm[i]] for i in range(6))
-   if best_total is None or (self.mode=="above" and score>best_total) or (self.mode=="below" and score<best_total):best_total=score;best_perm=perm
+   if best_total is None or (self.mode=="above" and score>best_total) or (self.mode=="below" and score<best_total) or (self.mode=="closest" and abs(score-self.goal)<abs(best_total-self.goal)):best_total=score;best_perm=perm
   mine=sum(x["value"] for x in players)
   root=BoxLayout(orientation="vertical",padding=dp(10),spacing=dp(7))
   head=GridLayout(cols=2,size_hint_y=None,height=dp(76),spacing=dp(8))
   left=("MON ÉQUIPE" if lang()=="fr" else "MY TEAM")+f"\nTOTAL : {mine}"
-  right=(("MEILLEUR POSSIBLE" if self.mode=="above" else "MINIMUM POSSIBLE") if lang()=="fr" else ("BEST POSSIBLE" if self.mode=="above" else "LOWEST POSSIBLE"))+f"\nTOTAL : {best_total}"
+  if self.mode=="closest":right=tr("closest_possible")+f"\nTOTAL : {best_total} | ÉCART : {abs(best_total-self.goal)}" if lang()=="fr" else tr("closest_possible")+f"\nTOTAL: {best_total} | GAP: {abs(best_total-self.goal)}"
+  else:right=(("MEILLEUR POSSIBLE" if self.mode=="above" else "MINIMUM POSSIBLE") if lang()=="fr" else ("BEST POSSIBLE" if self.mode=="above" else "LOWEST POSSIBLE"))+f"\nTOTAL : {best_total}"
   head.add_widget(Label(text=left,bold=True,font_size="16sp",halign="center"));head.add_widget(Label(text=right,bold=True,font_size="16sp",halign="center"));root.add_widget(head)
   scroll=ScrollView(do_scroll_x=False);grid=GridLayout(cols=1,size_hint_y=None,spacing=dp(8),padding=[0,dp(4)]);grid.bind(minimum_height=grid.setter("height"))
   for i,item in enumerate(players):

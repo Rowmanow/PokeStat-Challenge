@@ -1,17 +1,44 @@
+# Clés de signature et certificats
 *.jks
 *.keystore
 *.p12
+*.pfx
 *.pem
+
+# Fichiers contenant potentiellement des secrets
+signing.properties
+keystore.properties
+local.properties
+
+# Paquets Android générés
+*.apk
+*.aab
+*.apks
+
+# Dossiers de compilation Android
+.buildozer/
+bin/
+Buildfinal/
+release/
+
+# Environnements Python
+.venv/
+venv/
+env/
+
+# Cache Python
+__pycache__/
 *.pyc
 *.pyo
-.DS_Store
-.buildozer/
-.venv/
-Thumbs.db
-__pycache__/
-bin/
+
+# Cache de l’application
 cache/
-local.properties
-release/
+
+# Journaux et fichiers de diagnostic
+*.log
+erreur_lancement.txt
 windows/erreur_lancement.txt
-signing.properties
+
+# Fichiers système
+.DS_Store
+Thumbs.db
