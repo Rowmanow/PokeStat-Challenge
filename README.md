@@ -1,8 +1,15 @@
 # PokéStat Challenge
 
-Jeu de statistiques Pokémon disponible sur **Android** et **Windows**, avec deux modes de jeu : **Stat Draft** et **Stat Guesser**.
+PokéStat Challenge est un jeu de statistiques Pokémon disponible sur **Android** et **Windows**.
+
+Deux modes de jeu sont inclus :
+
+- **Stat Draft**
+- **Stat Guesser**
 
 L’application est disponible en français et en anglais.
+
+---
 
 ## Télécharger PokéStat Challenge
 
@@ -16,56 +23,40 @@ Fichier à télécharger :
 PokeStat-Challenge-1.0.3.apk
 ```
 
-La version Android 1.0.3 peut être installée directement par-dessus la version 1.0.0, sans désinstaller l’application.
+La version Android 1.0.3 utilise la même signature que la version 1.0.0. Elle peut être installée directement par-dessus l’ancienne version, sans désinstallation.
 
-### Windows, version 1.0.0
+### Windows
 
-**[Télécharger PokéStat Challenge pour Windows](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.0)**
+**[Télécharger la dernière version Windows](https://github.com/Rowmanow/PokeStat-Challenge/releases/latest)**
 
 Fichier à télécharger :
 
 ```text
-PokeStat-Challenge-Windows-v1.0.0.zip
+Pokestat-Challenge-Windows.zip
 ```
 
-> N’utilisez pas les archives automatiques `Source code (zip)` et `Source code (tar.gz)`. Elles contiennent le code source et ne correspondent pas aux versions prêtes à lancer.
+L’archive Windows contient deux interfaces utilisant les mêmes modes de jeu :
 
----
+- une interface verticale, adaptée aux écrans étroits, à TikTok et aux YouTube Shorts ;
+- une interface PC horizontale, adaptée aux écrans classiques, à YouTube et à OBS Studio.
 
-## Nouveautés de la version Android 1.0.3
-
-- Ajout du mode Draft **Le plus proche**
-- Victoire lorsque le score final se trouve à **20 points ou moins de l’objectif**
-- Ajout des Méga-Évolutions de **Pokémon Légendes : Z-A**
-- Prise en charge des formes Méga **X, Y et Z**
-- Nouveau filtre de formes :
-  - Standards
-  - Méga
-  - Régionales
-- Le filtre **Régionales** regroupe les formes d’Alola, de Galar, de Hisui et de Paldea
-- Mise à jour du numéro de version affiché sur l’accueil
-
-### Évolutions intégrées depuis la version 1.0.0
-
-- **Version 1.0.1** : ajout de la règle **Le plus proche** dans le mode Draft
-- **Version 1.0.2** : ajout des Méga-Évolutions introduites dans Pokémon Légendes : Z-A
-- **Version 1.0.3** : regroupement des formes d’Alola, de Galar, de Hisui et de Paldea dans un filtre unique nommé **Régionales**
+> N’utilisez pas les archives automatiques `Source code (zip)` et `Source code (tar.gz)` pour installer le jeu. Elles contiennent le code source du dépôt et non l’archive Windows préparée pour le lancement.
 
 ---
 
 ## Installation sur Android
 
-1. Ouvrez la [page de téléchargement de la version Android 1.0.3](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.3).
+1. Ouvrez la [page de téléchargement Android 1.0.3](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.3).
 2. Téléchargez `PokeStat-Challenge-1.0.3.apk`.
 3. Ouvrez le fichier APK sur votre téléphone.
 4. Si Android le demande, autorisez temporairement l’installation depuis votre navigateur ou votre gestionnaire de fichiers.
-5. Appuyez sur **Mettre à jour** si la version 1.0.0 est déjà installée.
+5. Appuyez sur **Mettre à jour** si une ancienne version est déjà installée.
 6. Appuyez sur **Installer** si aucune version précédente n’est présente.
-7. Lancez **PokéStat Challenge** depuis l’écran d’accueil.
+7. Lancez PokéStat Challenge depuis l’écran d’accueil.
 
-La version 1.0.3 utilise la même signature que la version 1.0.0. Elle peut donc être installée directement par-dessus l’ancienne version, sans désinstallation.
+Une connexion Internet est nécessaire pour récupérer certaines données et illustrations Pokémon.
 
-Une connexion Internet est nécessaire pour récupérer les données et les illustrations des Pokémon. Les données déjà téléchargées sont conservées dans le cache local afin d’accélérer les chargements suivants.
+Les données déjà téléchargées sont conservées dans le cache local afin d’accélérer les chargements suivants.
 
 ---
 
@@ -77,13 +68,13 @@ Une connexion Internet est nécessaire pour récupérer les données et les illu
 - Python 3.10 ou une version plus récente
 - Une connexion Internet lors du premier chargement de certaines données
 
-### Installation
+### Télécharger et extraire le jeu
 
-1. Ouvrez la [page de téléchargement de la version Windows 1.0.0](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.0).
-2. Téléchargez `PokeStat-Challenge-Windows-v1.0.0.zip`.
-3. Faites un clic droit sur l’archive téléchargée.
+1. Ouvrez la [page de la dernière version Windows](https://github.com/Rowmanow/PokeStat-Challenge/releases/latest).
+2. Téléchargez `Pokestat-Challenge-Windows.zip`.
+3. Faites un clic droit sur l’archive.
 4. Sélectionnez **Extraire tout**.
-5. Ouvrez le dossier extrait.
+5. Ouvrez le dossier `Pokestat-Challenge-Windows` obtenu après extraction.
 
 > Ne lancez pas le jeu directement depuis l’archive ZIP. Tous les fichiers doivent d’abord être extraits.
 
@@ -100,23 +91,79 @@ Dans le dossier extrait :
 py -3 -m pip install -r requirements.txt
 ```
 
-### Lancer le jeu
+### Choisir une interface
 
-Double-cliquez ensuite sur :
+#### Interface verticale
+
+Double-cliquez sur :
 
 ```text
-Pokestat-Challenge.vbs
+Pokestat-Challenge-Vertical.vbs
 ```
 
-Le lanceur démarre le jeu sans conserver de fenêtre de terminal à l’écran.
+Cette interface est adaptée :
 
-Vous pouvez également lancer l’application manuellement :
+- aux écrans verticaux ;
+- aux petits écrans ;
+- à TikTok ;
+- aux YouTube Shorts ;
+- à une utilisation sur un écran secondaire.
 
-```powershell
-py -3 accueil.py
+#### Interface PC
+
+Double-cliquez sur :
+
+```text
+Pokestat-Challenge-PC.vbs
 ```
 
-Si le lancement échoue, un fichier `erreur_lancement.txt` sera créé dans le dossier du jeu.
+Cette interface est adaptée :
+
+- aux écrans classiques ;
+- au format 1280 × 720 ;
+- au format 1920 × 1080 ;
+- aux vidéos YouTube ;
+- à OBS Studio ;
+- à l’utilisation d’une webcam.
+
+### Raccourcis de l’interface PC
+
+```text
+F11     Activer ou quitter le plein écran
+Échap   Quitter le plein écran
+```
+
+### Zone webcam
+
+L’interface PC réserve une zone fixe en haut à droite de chaque écran.
+
+Deux formats sont disponibles :
+
+- **4:3**
+- **16:9**
+
+La zone reste au même emplacement sur :
+
+- l’accueil ;
+- le Stat Draft ;
+- le Stat Guesser ;
+- le récapitulatif du Draft.
+
+Vous pouvez placer une source webcam par-dessus cette zone dans OBS Studio sans devoir la déplacer lors d’un changement d’écran.
+
+### Journaux d’erreur
+
+Si le lancement échoue, un fichier de diagnostic est créé dans le dossier du jeu :
+
+```text
+erreur_lancement.txt
+```
+
+ou :
+
+```text
+erreur_lancement_pc.txt
+```
 
 ---
 
@@ -126,7 +173,7 @@ Si le lancement échoue, un fichier `erreur_lancement.txt` sera créé dans le d
 
 Composez une équipe de six Pokémon en attribuant une statistique différente à chacun.
 
-Les valeurs sont masquées avant votre choix. Chaque catégorie statistique ne peut être utilisée qu’une seule fois pendant la partie.
+Les valeurs sont masquées avant votre choix. Chaque catégorie ne peut être utilisée qu’une seule fois pendant la partie.
 
 Les six statistiques disponibles sont :
 
@@ -137,7 +184,21 @@ Les six statistiques disponibles sont :
 - Défense Spéciale
 - Vitesse
 
-Trois objectifs sont disponibles.
+### Objectif du Draft
+
+La valeur de l’objectif peut être saisie manuellement.
+
+Un bouton **ALÉA** permet également de générer un nombre entier aléatoire entre :
+
+```text
+250 et 750
+```
+
+Le résultat peut ensuite être modifié manuellement.
+
+### Modes du Draft
+
+Trois modes sont disponibles.
 
 #### Au-dessus
 
@@ -147,7 +208,7 @@ Le score final doit être supérieur ou égal à l’objectif.
 
 Le score final doit être inférieur ou égal à l’objectif.
 
-#### Le plus proche
+#### Au plus proche de
 
 Le but est de terminer aussi près que possible de l’objectif.
 
@@ -161,19 +222,38 @@ De 580 à 620 inclus : victoire
 621 ou plus : défaite
 ```
 
+### Récapitulatif du Draft
+
 À la fin de la partie, un récapitulatif compare votre équipe à la meilleure répartition possible :
 
-- meilleur total en mode **Au-dessus**
-- total minimum en mode **En dessous**
-- total le plus proche de l’objectif en mode **Le plus proche**
+- meilleur total en mode **Au-dessus** ;
+- total minimum en mode **En dessous** ;
+- total le plus proche de l’objectif en mode **Au plus proche de**.
+
+Le calcul teste toutes les répartitions valides des six statistiques entre les six Pokémon.
 
 ### Stat Guesser
 
 Retrouvez les six statistiques de base du Pokémon en un nombre limité de tentatives.
 
-Après chaque essai, les bornes minimales et maximales sont actualisées pour guider les tentatives suivantes.
+Après chaque essai :
 
-Le nombre de tentatives peut être personnalisé avant de commencer.
+- une proposition trop basse met à jour la borne basse ;
+- une proposition trop haute met à jour la borne haute ;
+- une valeur exacte verrouille la statistique.
+
+Les statistiques à retrouver sont :
+
+- PV
+- Attaque
+- Attaque Spéciale
+- Défense
+- Défense Spéciale
+- Vitesse
+
+Le nombre de tentatives peut être personnalisé avant le début de la partie.
+
+La victoire ou la défaite est affichée directement dans l’interface.
 
 ---
 
@@ -191,74 +271,115 @@ Lorsque plusieurs types sont sélectionnés, les Pokémon correspondant à au mo
 
 Vous pouvez sélectionner une ou plusieurs générations.
 
-### Formes
+### Formes sur Windows
 
-Trois catégories sont disponibles :
+Les interfaces Windows proposent les choix suivants :
+
+- **Formes standards uniquement**
+- **Méga-Évolutions uniquement**
+- **Standard + Méga-Évolutions**
+
+Les filtres de types, de générations et de formes peuvent être combinés.
+
+Exemple :
+
+```text
+Type : Spectre
+Générations : Toutes
+Formes : Méga uniquement
+```
+
+### Formes sur Android
+
+La version Android propose trois catégories :
 
 - **Standards**
 - **Méga**
 - **Régionales**
 
+Le filtre Régionales regroupe :
+
+- les formes d’Alola ;
+- les formes de Galar ;
+- les formes de Hisui ;
+- les formes de Paldea.
+
 Les catégories peuvent être combinées librement.
-
-### Standards
-
-Cette catégorie contient les formes standards des Pokémon.
-
-### Méga
-
-Cette catégorie comprend notamment :
-
-- les Méga-Évolutions classiques
-- les nouvelles Méga-Évolutions de Pokémon Légendes : Z-A
-- les variantes Méga X, Y et Z
-
-### Régionales
-
-Cette catégorie regroupe :
-
-- les formes d’Alola
-- les formes de Galar
-- les formes de Hisui
-- les formes de Paldea
-
-Exemple pour un défi uniquement composé de formes régionales :
-
-```text
-Standards : désactivé
-Méga : désactivé
-Régionales : activé
-```
-
-Exemple pour autoriser toutes les formes :
-
-```text
-Standards : activé
-Méga : activé
-Régionales : activé
-```
 
 ---
 
-## Fonctionnalités
+## Fonctionnalités principales
+
+### Fonctionnalités communes
 
 - Interface en français et en anglais
-- Deux modes de jeu : Stat Draft et Stat Guesser
-- Trois objectifs dans le Draft : Au-dessus, En dessous et Le plus proche
-- Victoire à 20 points ou moins de l’objectif en mode Le plus proche
-- Filtres par types et générations
-- Filtres Standards, Méga et Régionales
-- Pokémon standards et Méga-Évolutions
-- Méga-Évolutions de Pokémon Légendes : Z-A
-- Prise en charge des formes Méga X, Y et Z
-- Formes d’Alola, de Galar, de Hisui et de Paldea
-- Tirage uniforme parmi les candidats autorisés
+- Stat Draft
+- Stat Guesser
+- Filtres par type
+- Filtres par génération
+- Pokémon standards
+- Méga-Évolutions
 - Nombre de tentatives personnalisable dans le Guesser
-- Calcul du combo optimal parmi les six Pokémon
-- Cache local pour accélérer les chargements suivants
-- Interface tactile sur Android
-- Lanceur silencieux sur Windows
-- APK Android signé permettant la mise à jour depuis la version 1.0.0
+- Calcul de la composition optimale dans le Draft
+- Cache local des données et illustrations
+- Illustrations Pokémon haute définition
+
+### Fonctionnalités du Draft
+
+- Mode Au-dessus
+- Mode En dessous
+- Mode Au plus proche de
+- Victoire à 20 points ou moins de l’objectif
+- Objectif saisissable manuellement
+- Objectif aléatoire entre 250 et 750
+- Filtre Standard et Méga
+- Récapitulatif détaillé
+
+### Fonctionnalités Windows
+
+- Interface verticale
+- Interface PC horizontale
+- Résolution PC adaptée au 1280 × 720
+- Fenêtre redimensionnable
+- Plein écran
+- Zone webcam fixe
+- Formats webcam 4:3 et 16:9
+- Emplacement webcam identique sur tous les écrans
+- Lanceurs silencieux Windows
+
+### Fonctionnalités Android
+
+- Interface tactile
+- APK signé
+- Mise à jour directe depuis une ancienne version compatible
+- Filtre de formes régionales
+- Formes d’Alola, de Galar, de Hisui et de Paldea
+
+---
+
+## Vérifier l’archive Windows
+
+GitHub affiche automatiquement un condensat SHA-256 à côté de l’archive de la Release.
+
+Lorsqu’un fichier `.sha256` est également fourni, vous pouvez vérifier l’intégrité de l’archive avec PowerShell :
+
+```powershell
+$expected = (
+    Get-Content ".\Pokestat-Challenge-Windows.zip.sha256"
+).Split()[0]
+
+$actual = (
+    Get-FileHash ".\Pokestat-Challenge-Windows.zip" -Algorithm SHA256
+).Hash.ToLower()
+
+$actual -eq $expected
+```
+
+Le résultat attendu est :
+
+```text
+True
+```
 
 ---
 
@@ -266,15 +387,18 @@ Régionales : activé
 
 PokéStat Challenge is a Pokémon statistics game available on **Android** and **Windows**.
 
-The application includes two game modes: **Stat Draft** and **Stat Guesser**.
+The application includes two game modes:
 
-The interface is available in both French and English.
+- **Stat Draft**
+- **Stat Guesser**
+
+The interface is available in French and English.
 
 ### Download for Android
 
-**[Download PokéStat Challenge Mobile v1.0.3](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.3)**
+**[Download PokéStat Challenge for Android](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.3)**
 
-Download this file:
+Download:
 
 ```text
 PokeStat-Challenge-1.0.3.apk
@@ -282,82 +406,92 @@ PokeStat-Challenge-1.0.3.apk
 
 ### Download for Windows
 
-**[Downloadhub.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.0)**
+**[Download the latest Windows release](https://github.com/Rowmanow/PokeStat-Challenge/releases/latest)**
 
-Download this file:
-
-```text
-PokeStat-Challenge-Windows-v1.0.0.zip
-```
-
-> Do not download the automatic `Source code (zip)` or `Source code (tar.gz)` archives. They contain the source code and are not ready-to-run versions.
-
-### What’s new in Android v1.0.3
-
-- Added the **Closest** Draft mode
-- Victory is awarded when the final score is within **20 points of the target**
-- Added the new Mega Evolutions introduced in **Pokémon Legends: Z-A**
-- Added support for Mega **X, Y and Z** forms
-- New form filters:
-  - Standard
-  - Mega
-  - Regional
-- The **Regional** filter groups the Alolan, Galarian, Hisuian and Paldean forms
-- Updated the version number displayed on the home screen
-
-### Updating from Android v1.0.0
-
-Version 1.0.3 uses the same signing certificate as version 1.0.0.
-
-Version 1.0.3 can therefore be installed directly over version 1.0.0 without uninstalling the application.
-
-### Android installation
-
-1. Open the [Android v1.0.3 download page](https://github.com/Rowmanow/PokeStat-Challenge/releases/tag/v1.0.0).
-2. Download `PokeStat-Challenge-1.0.3.apk`.
-3. Open the APK file on your Android device.
-4. Allow installation from this source if Android asks for permission.
-5. Tap **Update** if version 1.0.0 is already installed.
-6. Tap **Install** if no previous version is installed.
-
-An Internet connection is required to download Pokémon data and artwork.
-
-Previously downloaded data is stored in the local cache to speed up future loading.
-
-### Draft modes
-
-Three Draft objectives are available:
-
-- **Above**: finish with a score greater than or equal to the target
-- **Below**: finish with a score lower than or equal to the target
-- **Closest**: finish as close as possible to the target
-
-In Closest mode, victory is awarded when the final difference is 20 points or less.
-
-Example with a target of 600:
+Download:
 
 ```text
-580 to 620 included: victory
-579 or lower: defeat
-621 or higher: defeat
+Pokestat-Challenge-Windows.zip
 ```
 
-### Form filters
+> Do not use the automatic `Source code (zip)` or `Source code (tar.gz)` archives to install the Windows version.
 
-Three form categories are available:
+### Windows interfaces
 
-- **Standard**
-- **Mega**
-- **Regional**
+The Windows archive contains two interfaces.
 
-The Regional filter groups:
+#### Vertical interface
 
-- Alolan forms
-- Galarian forms
-- Hisuian forms
-- Paldean forms
+Launch:
 
-The Mega filter includes the classic Mega Evolutions and the new X, Y and Z forms introduced in Pokémon Legends: Z-A.
+```text
+Pokestat-Challenge-Vertical.vbs
+```
+
+Designed for vertical screens, TikTok and YouTube Shorts.
+
+#### PC interface
+
+Launch:
+
+```text
+Pokestat-Challenge-PC.vbs
+```
+
+Designed for conventional displays, YouTube recording and OBS Studio.
+
+The PC interface includes:
+
+- a 1280 × 720 layout;
+- resizable windows;
+- fullscreen support;
+- a fixed webcam area;
+- 4:3 and 16:9 webcam formats;
+- the same webcam position on every screen.
+
+### Windows installation
+
+1. Download `Pokestat-Challenge-Windows.zip`.
+2. Extract the archive completely.
+3. Open PowerShell in the extracted folder.
+4. Run:
+
+```powershell
+py -3 -m pip install -r requirements.txt
+```
+
+5. Launch the preferred VBS file.
+
+### Stat Draft
+
+Assign one different stat to each of six Pokémon.
+
+Three modes are available:
+
+- **Above**
+- **Below**
+- **Closest to**
+
+In Closest mode, victory is awarded when the final total is within 20 points of the target.
+
+A **RANDOM** button generates any integer target between 250 and 750.
+
+The target can still be edited manually.
+
+At the end of the game, the recap compares the player’s choices with the optimal assignment.
+
+### Stat Guesser
+
+Find all six Base Stats using the lower and upper bounds.
+
+The number of attempts can be customized before starting a game.
+
+Filters are available for:
+
+- types;
+- generations;
+- standard forms;
+- Mega Evolutions.
 
 ---
 
@@ -379,24 +513,27 @@ The Mega filter includes the classic Mega Evolutions and the new X, Y and Z form
   <img src="screenshots/Windows-Guesser.png" alt="Stat Guesser Windows" width="23%">
 </p>
 
+> Les captures Windows peuvent être complétées ultérieurement avec des images séparées de l’interface verticale et de l’interface PC.
+
 ---
 
 ## Signaler un problème
 
-Utilisez l’onglet **Issues** du dépôt :
+Utilisez l’onglet Issues du dépôt :
 
 **https://github.com/Rowmanow/PokeStat-Challenge/issues/new/choose**
 
 Merci de préciser :
 
-- le modèle du téléphone ou de l’ordinateur
-- la version Android ou Windows
-- la version de PokéStat Challenge
-- la langue utilisée
-- le mode de jeu concerné
-- les filtres sélectionnés
-- les étapes permettant de reproduire le problème
-- une capture d’écran si possible
+- le modèle du téléphone ou de l’ordinateur ;
+- le système d’exploitation ;
+- la version Android ou Windows ;
+- la langue utilisée ;
+- l’interface Windows utilisée, verticale ou PC ;
+- le mode de jeu concerné ;
+- les filtres sélectionnés ;
+- les étapes permettant de reproduire le problème ;
+- une capture d’écran si possible.
 
 ---
 
@@ -412,12 +549,18 @@ Consultez la [politique de confidentialité](PRIVACY.md).
 
 ## Avertissement
 
-PokéStat Challenge est un projet communautaire non officiel.
+PokéStat Challenge est un projet communautaire gratuit et non officiel.
 
-Pokémon et les noms associés appartiennent à leurs ayants droit respectifs. Ce projet n’est ni affilié, ni approuvé, ni sponsorisé par Nintendo, Game Freak ou The Pokémon Company.
+Pokémon et les noms associés appartiennent à leurs ayants droit respectifs.
+
+Ce projet n’est ni affilié, ni approuvé, ni sponsorisé par Nintendo, Game Freak ou The Pokémon Company.
+
+---
 
 ## Licence
 
-Aucune licence open source n’est accordée pour le moment. Le code est visible à des fins de test et d’évaluation.
+Aucune licence open source n’est accordée pour le moment.
+
+Le code est visible à des fins de test et d’évaluation.
 
 Consultez [LICENSE.md](LICENSE.md).
