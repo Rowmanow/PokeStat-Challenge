@@ -32,7 +32,11 @@ class PokemonStatDraftPC(PokemonStatDraft):
             tk.Label(header, text="POKÉMON", bg=COLORS["bg"], fg=COLORS["gold"],
                      font=("Segoe UI Black", 11, "bold")).place(x=18, rely=0.5, anchor="w")
 
-        tk.Label(header, text="POKÉSTAT CHALLENGE", bg=COLORS["bg"], fg="white",
+        # Center within the usable game area (left of the fixed 320 px webcam slot).
+        title_zone = tk.Frame(header, bg=COLORS["bg"], width=900, height=72)
+        title_zone.place(x=0, y=0)
+        title_zone.pack_propagate(False)
+        tk.Label(title_zone, text="POKÉSTAT CHALLENGE - DRAFT", bg=COLORS["bg"], fg="white",
                  font=("Segoe UI", 17, "bold")).place(relx=0.5, rely=0.5, anchor="center")
 
         tk.Button(header, text="← ACCUEIL", command=self._return_home,

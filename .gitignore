@@ -74,6 +74,11 @@ save/
 # Sauvegardes locales du code
 /save/
 
+# Sauvegardes locales créées pendant les corrections
+*.bak
+*.bak.*
+*.avant-*.bak
+
 
 # =========================================================
 # JOURNAUX ET DIAGNOSTICS
