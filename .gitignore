@@ -116,3 +116,10 @@ windows/save/
 windows/__pycache__/
 windows/erreur_lancement.txt
 windows/erreur_lancement_pc.txt
+
+
+# Scripts et dossiers locaux de publication
+/test-release/
+/windows - save */
+/windows/release-exe/
+/windows/test-standalone/
