@@ -8,9 +8,20 @@ from affichage_pc import apply_pc_window, place_webcam_slot
 class StatGuesserPC(StatGuesser):
     def __init__(self, master, on_home, language="fr", webcam_aspect="4:3"):
         self.webcam_aspect = webcam_aspect
+        self.artwork_target_height = 225
         super().__init__(master, on_home, language)
         apply_pc_window(self, "PokéStat Challenge - Stat Guesser")
         place_webcam_slot(self, self.language, self.webcam_aspect)
+
+    def new_game(self):
+        """Start a new Pokémon while keeping PC filters available.
+
+        The vertical Guesser keeps categories locked during a game. On PC,
+        filters remain editable so the player can change a category then click
+        NEW GAME immediately, without entering six throwaway guesses.
+        """
+        super().new_game()
+        self.category_button.config(state="normal", cursor="hand2")
 
     def build(self):
         # Fixed 260px top band. The webcam occupies the same top-right coordinates as Home and Draft.
@@ -26,8 +37,8 @@ class StatGuesserPC(StatGuesser):
         filters=tk.Frame(top,bg=COLORS["panel"],padx=12,pady=10,width=880,height=150)
         filters.place(x=18,y=95)
         filters.grid_propagate(False)
-        for c in range(4): filters.columnconfigure(c,weight=1,uniform="f")
-        labels=[self.tr("types"),self.tr("generations"),self.tr("forms"),self.tr("attempts")]
+        for c in range(5): filters.columnconfigure(c,weight=1,uniform="f")
+        labels=[self.tr("types"),self.tr("generations"),self.tr("forms"),self.category_tr("title"),self.tr("attempts")]
         for c,text in enumerate(labels):
             tk.Label(filters,text=text,bg=COLORS["panel"],fg="#94a3b8",
                      font=("Segoe UI",8,"bold")).grid(row=0,column=c,sticky="w",padx=(0 if c==0 else 7,0))
@@ -37,12 +48,17 @@ class StatGuesserPC(StatGuesser):
         self.gen_button.grid(row=1,column=1,sticky="ew",padx=(7,0),pady=(3,8))
         self.form_button=tk.Button(filters,text=self.tr("both"),command=self.open_form_filter,bg="white",fg=COLORS["dark"],relief="flat",bd=0,pady=9,font=("Segoe UI",9,"bold"))
         self.form_button.grid(row=1,column=2,sticky="ew",padx=(7,0),pady=(3,8))
-        attempts=tk.Frame(filters,bg="white",height=35); attempts.grid(row=1,column=3,sticky="ew",padx=(7,0),pady=(3,8)); attempts.grid_propagate(False); attempts.columnconfigure(1,weight=1)
+        self.category_button=tk.Button(filters,text=self.category_button_text(),command=self.open_category_filter,bg="white",fg=COLORS["dark"],relief="flat",bd=0,pady=9,font=("Segoe UI",8,"bold")); self.category_button.grid(row=1,column=3,sticky="ew",padx=(7,0),pady=(3,8))
+        attempts=tk.Frame(filters,bg="white",height=35); attempts.grid(row=1,column=4,sticky="ew",padx=(7,0),pady=(3,8)); attempts.grid_propagate(False); attempts.columnconfigure(1,weight=1)
         tk.Button(attempts,text="−",command=lambda:self.change_attempts(-1),bg="#e2e8f0",fg=COLORS["dark"],relief="flat",bd=0,width=3,font=("Segoe UI",11,"bold")).grid(row=0,column=0,sticky="ns")
         self.attempts_entry=tk.Entry(attempts,textvariable=self.attempts_var,justify="center",bg="white",fg=COLORS["dark"],relief="flat",bd=0,font=("Segoe UI",10,"bold"),validate="key")
         self.attempts_entry.config(validatecommand=(self.register(self.validate_attempts_input),"%P")); self.attempts_entry.grid(row=0,column=1,sticky="nsew")
         tk.Button(attempts,text="+",command=lambda:self.change_attempts(1),bg="#e2e8f0",fg=COLORS["dark"],relief="flat",bd=0,width=3,font=("Segoe UI",11,"bold")).grid(row=0,column=2,sticky="ns")
-        tk.Button(filters,text=self.tr("new_game"),command=self.new_game,bg="white",fg=COLORS["dark"],relief="flat",bd=0,pady=9,font=("Segoe UI",10,"bold")).grid(row=2,column=0,columnspan=4,sticky="ew")
+        tk.Button(filters,text=self.tr("new_game"),command=self.new_game,
+                  bg=COLORS["green"],fg="white",activebackground="#15803d",
+                  activeforeground="white",relief="flat",bd=0,pady=9,
+                  font=("Segoe UI",10,"bold"),cursor="hand2").grid(
+                      row=2,column=0,columnspan=5,sticky="ew")
 
         main=tk.Frame(self,bg=COLORS["bg"],padx=18,pady=10)
         main.pack(fill="both",expand=True)
@@ -52,7 +68,7 @@ class StatGuesserPC(StatGuesser):
         card.grid(row=0,column=0,sticky="nsew",padx=(0,8))
         self.name=tk.Label(card,text="",bg="white",fg=COLORS["dark"],font=("Segoe UI",23,"bold")); self.name.pack()
         self.types_frame=tk.Frame(card,bg="white",height=35); self.types_frame.pack(fill="x",pady=(2,2)); self.types_frame.pack_propagate(False)
-        image_box=tk.Frame(card,bg="white",height=270); image_box.pack(fill="both",expand=True); image_box.pack_propagate(False)
+        image_box=tk.Frame(card,bg="white",height=305); image_box.pack(fill="both",expand=True); image_box.pack_propagate(False)
         self.image=tk.Label(image_box,bg="white"); self.image.pack(fill="both",expand=True)
         self.bst=tk.Label(card,text="",bg="white",fg=COLORS["green"],font=("Segoe UI",14,"bold")); self.bst.pack()
         self.attempt=tk.Label(card,text="",bg="white",fg=COLORS["muted"],font=("Segoe UI",10,"bold")); self.attempt.pack(pady=(2,0))

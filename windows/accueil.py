@@ -7,7 +7,7 @@ from mode_draft import ASSETS, COLORS, PokemonStatDraft
 from mode_guesser import StatGuesser
 from mode_stat_rush import StatRush
 
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 
 
 def fit_window(window):

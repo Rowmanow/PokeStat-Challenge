@@ -15,6 +15,7 @@ from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
+from pokemon_categories import (CategoryFilterMixin, CATEGORY_ALL, filter_pool_by_categories)
 
 API = "https://pokeapi.co/api/v2"
 APP_DIR = Path(__file__).resolve().parent
@@ -141,11 +142,54 @@ FORM_FALLBACK_LABELS = {
 }
 
 
+_GENERATION_NUMBER_BY_NAME = {
+    "generation-i": 1,
+    "generation-ii": 2,
+    "generation-iii": 3,
+    "generation-iv": 4,
+    "generation-v": 5,
+    "generation-vi": 6,
+    "generation-vii": 7,
+    "generation-viii": 8,
+    "generation-ix": 9,
+}
+_MEGA_ORIGIN_GENERATION_CACHE = {}
+
+
+def mega_origin_generation(name: str):
+    """Return the generation of the Mega Pokémon's base species.
+
+    PokéAPI classifies Mega forms as forms introduced in generation VI. For the
+    game filters, Mega-Blastoise must instead follow Blastoise and therefore
+    belong to generation I. The Pokémon endpoint gives the base species, whose
+    species endpoint gives the original generation.
+    """
+    if name in _MEGA_ORIGIN_GENERATION_CACHE:
+        return _MEGA_ORIGIN_GENERATION_CACHE[name]
+
+    try:
+        pokemon_data = get_json(f"{API}/pokemon/{name}", f"pokemon_{name}.json")
+        species_name = pokemon_data.get("species", {}).get("name")
+        if not species_name:
+            return None
+        species_data = get_json(
+            f"{API}/pokemon-species/{species_name}",
+            f"species_{species_name}.json",
+        )
+        generation_name = species_data.get("generation", {}).get("name")
+        generation = _GENERATION_NUMBER_BY_NAME.get(generation_name)
+    except Exception:
+        generation = None
+
+    _MEGA_ORIGIN_GENERATION_CACHE[name] = generation
+    return generation
+
+
 def special_form_generation(name: str):
     if any(token in name for token in EXCLUDED_FORM_TOKENS) or name.startswith(EXCLUDED_FORM_PREFIXES):
         return None
     if "-mega" in name:
-        return 6
+        return mega_origin_generation(name)
     for region, generation in REGIONAL_GENERATIONS.items():
         if f"-{region}" in name:
             return generation
@@ -219,7 +263,7 @@ def get_bytes(url: str, cache_name: str) -> bytes:
     return content
 
 
-class PokemonStatDraft(tk.Toplevel):
+class PokemonStatDraft(CategoryFilterMixin, tk.Toplevel):
     def __init__(self, master=None, on_home=None, language="fr"):
         super().__init__(master)
         self.on_home = on_home
@@ -240,6 +284,7 @@ class PokemonStatDraft(tk.Toplevel):
         self.selected_generations = set(range(1, 10))
         self.selected_types = set(TYPE_KEYS)
         self.form_mode = "all"
+        self.selected_categories = {CATEGORY_ALL}
         self.game_mode = "high"
         self.preloaded_sequences = []
         self.pending_name_sequences = []
@@ -425,6 +470,8 @@ class PokemonStatDraft(tk.Toplevel):
         self.form_title = tk.Label(settings, text=self.form_tr("title"), bg=COLORS["panel"], fg="#94a3b8",
                                    font=("Segoe UI", 8, "bold"))
         self.form_title.grid(row=0, column=2, sticky="w", padx=(6, 0))
+        self.category_title = tk.Label(settings, text=self.category_tr("title"), bg=COLORS["panel"], fg="#94a3b8", font=("Segoe UI", 8, "bold"))
+        self.category_title.grid(row=0, column=3, sticky="w", padx=(6, 0))
 
         self.type_button = tk.Button(settings, text=self.tr("types_all"), command=self.open_type_filter,
                                      bg=COLORS["blue"], fg="white", activebackground="#1d4ed8",
@@ -441,6 +488,8 @@ class PokemonStatDraft(tk.Toplevel):
                                      activeforeground="white", relief="flat", bd=0, cursor="hand2",
                                      padx=3, pady=8, font=("Segoe UI", 8, "bold"))
         self.form_button.grid(row=1, column=2, sticky="ew", padx=(6, 0), pady=(3, 8))
+        self.category_button = tk.Button(settings, text=self.category_button_text(), command=self.open_category_filter, bg="#334155", fg="white", activebackground="#475569", activeforeground="white", relief="flat", bd=0, cursor="hand2", padx=3, pady=8, font=("Segoe UI", 8, "bold"))
+        self.category_button.grid(row=1, column=3, sticky="ew", padx=(6, 0), pady=(3, 8))
 
         self.mode_title = tk.Label(settings, text=self.tr("mode"), bg=COLORS["panel"], fg="#94a3b8",
                                    font=("Segoe UI", 8, "bold"))
@@ -715,7 +764,7 @@ class PokemonStatDraft(tk.Toplevel):
             self.start_button.config(state="disabled", bg=COLORS["red"], fg="white", activebackground=COLORS["red_hover"], disabledforeground="#fecaca", cursor="arrow")
 
     def _current_filter_signature(self):
-        return (frozenset(self.selected_types), frozenset(self.selected_generations), self.form_mode)
+        return (frozenset(self.selected_types), frozenset(self.selected_generations), self.form_mode, frozenset(self.selected_categories))
 
     def _prepare_sequence(self, names):
         prepared = {}
@@ -819,6 +868,7 @@ class PokemonStatDraft(tk.Toplevel):
             return
         self.chosen.clear()
         self.chosen_details.clear()
+        self.category_button.config(state="disabled", cursor="arrow")
         self.recap_button.config(state="disabled", bg=COLORS["blue"], cursor="arrow")
         self.used_pokemon.clear()
         self.current = None
@@ -851,10 +901,12 @@ class PokemonStatDraft(tk.Toplevel):
             and item["name"] in type_names
         }
         if self.form_mode == "standard":
-            return sorted(standard_pool)
-        if self.form_mode == "mega":
-            return sorted(mega_pool)
-        return sorted(standard_pool | mega_pool)
+            pool = sorted(standard_pool)
+        elif self.form_mode == "mega":
+            pool = sorted(mega_pool)
+        else:
+            pool = sorted(standard_pool | mega_pool)
+        return filter_pool_by_categories(pool, self.selected_categories, get_json, API)
 
     def _pool_loaded(self, pool):
         self.pool = pool
@@ -1041,6 +1093,7 @@ class PokemonStatDraft(tk.Toplevel):
         self._refresh_current_stats()
 
     def finish_game(self):
+        self.category_button.config(state="normal", cursor="hand2")
         total, target = sum(self.chosen.values()), int(self.target_var.get())
         mode = self.mode_key()
         target_gap = abs(total - target)

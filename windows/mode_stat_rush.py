@@ -12,6 +12,7 @@ from pathlib import Path
 from tkinter import messagebox
 
 from PIL import Image, ImageTk
+from pokemon_categories import (CategoryFilterMixin, CATEGORY_ALL, filter_pool_by_categories)
 
 from mode_draft import (
     API, COLORS, TYPE_KEYS, TYPE_LABELS, TYPE_COLORS, TYPE_ICONS,
@@ -72,7 +73,7 @@ def _save_dir() -> Path:
     return path
 
 
-class StatRush(tk.Toplevel):
+class StatRush(CategoryFilterMixin, tk.Toplevel):
     def __init__(self, master=None, on_home=None, language="fr"):
         super().__init__(master)
         self.on_home = on_home
@@ -83,6 +84,7 @@ class StatRush(tk.Toplevel):
         self.selected_types = set(TYPE_KEYS)
         self.selected_generations = set(range(1, 10))
         self.form_mode = "both"
+        self.selected_categories = {CATEGORY_ALL}
         self.rule_mode = "mixed"
         self.hint_enabled = True
         self.current_rule = "highest"
@@ -190,8 +192,11 @@ class StatRush(tk.Toplevel):
         self.gen_button.grid(row=3, column=1, sticky="ew", padx=(4, 0))
 
         self._setting_label(settings, self.tr("forms"), 4, 0)
+        self._setting_label(settings, self.category_tr("title"), 4, 1)
         self.form_button = tk.Button(settings, command=self.open_form_filter, bg="white", fg=COLORS["dark"], relief="flat", bd=0, pady=7, font=("Segoe UI", 8, "bold"))
-        self.form_button.grid(row=5, column=0, columnspan=2, sticky="ew")
+        self.form_button.grid(row=5, column=0, sticky="ew", padx=(0, 4))
+        self.category_button = tk.Button(settings, command=self.open_category_filter, bg="white", fg=COLORS["dark"], relief="flat", bd=0, pady=7, font=("Segoe UI", 8, "bold"), text=self.category_button_text())
+        self.category_button.grid(row=5, column=1, sticky="ew", padx=(4, 0))
 
         score = tk.Frame(body, bg=COLORS["panel"], padx=12, pady=7)
         score.pack(fill="x", pady=(0, 8))
@@ -246,6 +251,7 @@ class StatRush(tk.Toplevel):
         self.type_button.config(text=self.tr("all_types") if len(self.selected_types) == len(TYPE_KEYS) else f"{len(self.selected_types)} {self.tr('types')}")
         self.gen_button.config(text=self.tr("all_generations") if len(self.selected_generations) == 9 else ", ".join(map(str, sorted(self.selected_generations))))
         self.form_button.config(text=self._form_text())
+        self.category_button.config(text=self.category_button_text())
         self._refresh_score()
 
     def _refresh_score(self):
@@ -323,6 +329,7 @@ class StatRush(tk.Toplevel):
         all_forms = get_json(f"{API}/pokemon?limit=100000&offset=0", "pokemon_all_forms.json")
         mega = {item["name"] for item in all_forms.get("results", []) if "-mega" in item["name"] and item["name"] in typed and special_form_generation(item["name"]) in self.selected_generations}
         pool = standard if self.form_mode == "standard" else mega if self.form_mode == "mega" else standard | mega
+        pool = filter_pool_by_categories(list(pool), self.selected_categories, get_json, API)
         if not pool: raise ValueError(self.tr("no_match"))
         return list(pool)
 
@@ -436,7 +443,7 @@ class StatRush(tk.Toplevel):
     def _set_settings_state(self, enabled):
         state = "normal" if enabled else "disabled"
         for widget in (self.rule_button, self.hint_button, self.type_button,
-                       self.gen_button, self.form_button):
+                       self.gen_button, self.form_button, self.category_button):
             widget.config(state=state)
 
     def _cancel_scheduled_next(self):

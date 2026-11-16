@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from PIL import Image, ImageTk
+from pokemon_categories import (CategoryFilterMixin, CATEGORY_ALL, filter_pool_by_categories)
 
 from mode_draft import (
     API,
@@ -66,11 +67,11 @@ GUESSER_STATS = {
 
 STATS=[("hp","HP","♥"),("attack","Attaque","⚔"),("special-attack","Attaque spéciale","✦"),("defense","Défense","◐"),("special-defense","Défense spéciale","♟"),("speed","Vitesse","ϟ")]
 
-class StatGuesser(tk.Toplevel):
+class StatGuesser(CategoryFilterMixin, tk.Toplevel):
     def __init__(self,master,on_home,language="fr"):
         super().__init__(master); self.on_home=on_home; self.language=language; self.title("PokéStat Challenge - Stat Guesser"); self.configure(bg=COLORS["bg"]); self.protocol("WM_DELETE_WINDOW",self.go_home)
         self.target={}; self.bounds={}; self.entries={}; self.bound_labels={}; self.tries=1; self.finished=False; self.sprite=None
-        self.selected_types=set(TYPE_KEYS); self.selected_generations=set(range(1,10)); self.form_mode="both"; self.pool=[]
+        self.selected_types=set(TYPE_KEYS); self.selected_generations=set(range(1,10)); self.form_mode="both"; self.selected_categories={CATEGORY_ALL}; self.pool=[]
         self.max_attempts=10; self.attempts_var=tk.StringVar(value="10")
         self.build(); self.prepare_idle_screen()
     def tr(self, key, **kwargs):
@@ -92,6 +93,8 @@ class StatGuesser(tk.Toplevel):
         tk.Label(filters,text=self.tr("forms"),bg=COLORS["panel"],fg="#94a3b8",font=("Segoe UI",8,"bold")).grid(row=2,column=0,sticky="w",pady=(7,0))
         tk.Label(filters,text=self.tr("attempts"),bg=COLORS["panel"],fg="#94a3b8",font=("Segoe UI",8,"bold")).grid(row=2,column=1,sticky="w",padx=(8,0),pady=(7,0))
         self.form_button=tk.Button(filters,text=self.tr("both"),command=self.open_form_filter,bg="white",fg=COLORS["dark"],relief="flat",bd=0,pady=7,font=("Segoe UI",9,"bold")); self.form_button.grid(row=3,column=0,sticky="ew",pady=(3,0))
+        tk.Label(filters,text=self.category_tr("title"),bg=COLORS["panel"],fg="#94a3b8",font=("Segoe UI",8,"bold")).grid(row=4,column=0,sticky="w",pady=(7,0))
+        self.category_button=tk.Button(filters,text=self.category_button_text(),command=self.open_category_filter,bg="white",fg=COLORS["dark"],relief="flat",bd=0,pady=7,font=("Segoe UI",8,"bold")); self.category_button.grid(row=5,column=0,columnspan=2,sticky="ew",pady=(3,0))
         attempts_box=tk.Frame(filters,bg="white",height=34)
         attempts_box.grid(row=3,column=1,sticky="ew",padx=(8,0),pady=(3,0))
         attempts_box.grid_propagate(False)
@@ -136,6 +139,7 @@ class StatGuesser(tk.Toplevel):
 
     def prepare_idle_screen(self):
         self.target={}; self.finished=False; self.sprite=None
+        self.category_button.config(state="normal", cursor="hand2")
         self.name.config(text=self.tr("ready"))
         self.show_type_badges([])
         self.image.config(image=""); self.bst.config(text=self.tr("click_new")); self.attempt.config(text=self.tr("no_game"))
@@ -199,8 +203,9 @@ class StatGuesser(tk.Toplevel):
         tt=self.tr("all_types") if len(self.selected_types)==len(TYPE_KEYS) else (" / ".join(TYPE_LABELS[self.language].get(k,k).upper() for k in sorted(self.selected_types)) if len(self.selected_types)<=2 else f"TYPES : {len(self.selected_types)} {self.tr('choices')}")
         gt=self.tr("all_generations") if len(self.selected_generations)==9 else ("GEN : "+", ".join(map(str,sorted(self.selected_generations))) if len(self.selected_generations)<=3 else f"GEN : {len(self.selected_generations)} {self.tr('choices')}")
         form_text={"standard":self.tr("standard"),"mega":self.tr("mega"),"both":self.tr("both")}[self.form_mode]
-        self.type_button.config(text=tt); self.gen_button.config(text=gt); self.form_button.config(text=form_text)
+        self.type_button.config(text=tt); self.gen_button.config(text=gt); self.form_button.config(text=form_text); self.category_button.config(text=self.category_button_text())
     def new_game(self):
+        self.category_button.config(state="disabled", cursor="arrow")
         try:
             requested_attempts=int(self.attempts_var.get())
         except ValueError:
@@ -228,9 +233,14 @@ class StatGuesser(tk.Toplevel):
             if self.form_mode=="standard": self.pool=sorted(standard_pool)
             elif self.form_mode=="mega": self.pool=sorted(mega_pool)
             else: self.pool=sorted(standard_pool | mega_pool)
+            self.pool=filter_pool_by_categories(self.pool,self.selected_categories,get_json,API)
             if not self.pool: raise ValueError(self.tr("no_match"))
             self.load_pokemon()
-        except Exception as exc: self.after(0,lambda:messagebox.showerror(self.tr("filters"),f"{self.tr("prepare_error")}\n\n{exc}",parent=self))
+        except Exception as exc:
+            def failed():
+                self.category_button.config(state="normal", cursor="hand2")
+                messagebox.showerror(self.tr("filters"),f"{self.tr('prepare_error')}\n\n{exc}",parent=self)
+            self.after(0, failed)
     def load_pokemon(self):
         try:
             api_name=random.choice(self.pool); data=get_json(f"{API}/pokemon/{api_name}",f"pokemon_{api_name}.json"); species=get_json(data["species"]["url"],f"species_{data['species']['name']}.json")
@@ -272,7 +282,7 @@ class StatGuesser(tk.Toplevel):
 
             # Normalize by visible height only. Wide Pokémon can use almost the
             # full card width instead of being reduced by a narrow width limit.
-            target_height = 158
+            target_height = getattr(self, "artwork_target_height", 158)
             if im.height > 0:
                 scale = target_height / im.height
                 target_width = max(1, round(im.width * scale))
@@ -305,6 +315,7 @@ class StatGuesser(tk.Toplevel):
         self.tries+=1;self.attempt.config(text=self.tr("attempt", n=self.tries, max=self.max_attempts));self.status.config(text=self.tr("bounds"),fg="#94a3b8")
     def finish(self,win,guess):
         self.finished=True
+        self.category_button.config(state="normal", cursor="hand2")
         if win:
             self.validate.config(text=self.tr("victory"),state="disabled",bg=COLORS["green"],fg="white",disabledforeground="white")
             self.status.config(text=self.tr("won", n=self.tries),fg=COLORS["green"])

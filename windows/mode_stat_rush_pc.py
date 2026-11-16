@@ -50,10 +50,10 @@ class StatRushPC(StatRush):
                             width=880, height=155)
         settings.place(x=18, y=88)
         settings.grid_propagate(False)
-        for c in range(5):
+        for c in range(6):
             settings.columnconfigure(c, weight=1, uniform="rush_pc")
         labels = [self.tr("rule"), self.tr("hint"), self.tr("types"),
-                  self.tr("generations"), self.tr("forms")]
+                  self.tr("generations"), self.tr("forms"), self.category_tr("title")]
         for c, text in enumerate(labels):
             tk.Label(settings, text=text, bg=COLORS["panel"], fg="#94a3b8",
                      font=("Segoe UI",8,"bold")).grid(
@@ -78,13 +78,15 @@ class StatRushPC(StatRush):
                                      fg=COLORS["dark"], relief="flat", bd=0,
                                      pady=8, font=("Segoe UI",8,"bold"))
         self.form_button.grid(row=1,column=4,sticky="ew",padx=(7,0))
+        self.category_button = tk.Button(settings, command=self.open_category_filter, bg="white", fg=COLORS["dark"], relief="flat", bd=0, pady=8, font=("Segoe UI",8,"bold"), text=self.category_button_text())
+        self.category_button.grid(row=1,column=5,sticky="ew",padx=(7,0))
         self.settings_start_button = tk.Button(
             settings,
-            text=("APPLIQUER LES RÈGLES ET DÉMARRER" if self.language == "fr"
-                  else "APPLY RULES AND START"),
-            command=self.start_series, bg=COLORS["red"], fg="white",
-            relief="flat", bd=0, pady=10, font=("Segoe UI",10,"bold"))
-        self.settings_start_button.grid(row=2,column=0,columnspan=5,
+            text=("NOUVELLE PARTIE" if self.language == "fr" else "NEW GAME"),
+            command=self.start_series, bg=COLORS["green"], fg="white",
+            activebackground="#15803d", activeforeground="white",
+            relief="flat", bd=0, pady=10, font=("Segoe UI",10,"bold"), cursor="hand2")
+        self.settings_start_button.grid(row=2,column=0,columnspan=6,
                                         sticky="ew",pady=(12,0))
 
         main = tk.Frame(self, bg=COLORS["bg"], padx=18, pady=10)
@@ -149,13 +151,22 @@ class StatRushPC(StatRush):
         self.status_label.grid(row=7,column=0,sticky="ew",pady=(5,3))
 
         self.action_button = tk.Button(
-            side, command=self.start_series,
-            text=("DÉMARRER LA SÉRIE" if self.language == "fr" else "START SERIES"),
-            bg=COLORS["red"],fg="white",activebackground=COLORS["red"],
-            activeforeground="white",relief="flat",bd=0,pady=10,
-            font=("Segoe UI",11,"bold"),cursor="hand2")
+            side, command=self.validate_answer, text=self.tr("validate"),
+            state="disabled", bg="#475569", fg="#cbd5e1",
+            disabledforeground="#cbd5e1", activebackground=COLORS["gold"],
+            activeforeground=COLORS["dark"], relief="flat",bd=0,pady=10,
+            font=("Segoe UI",11,"bold"),cursor="arrow")
         self.action_button.grid(row=8,column=0,sticky="ew",pady=(3,0))
         self._refresh_settings()
+
+    def _prepare_idle(self):
+        super()._prepare_idle()
+        self.action_button.config(text=self.tr("validate"), command=self.validate_answer,
+                                  state="disabled", bg="#475569", fg="#cbd5e1",
+                                  disabledforeground="#cbd5e1", cursor="arrow")
+        self.settings_start_button.config(
+            text=("NOUVELLE PARTIE" if self.language == "fr" else "NEW GAME"),
+            state="normal", bg=COLORS["green"], fg="white", cursor="hand2")
 
     def _show_hint_widget(self):
         if not self.hint_label.winfo_manager():

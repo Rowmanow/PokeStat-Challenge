@@ -9,7 +9,7 @@ from mode_guesser_pc import StatGuesserPC
 from mode_stat_rush_pc import StatRushPC
 from affichage_pc import apply_pc_window, place_webcam_slot
 
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.3.0"
 
 
 class PokeStatChallengePC(tk.Tk):

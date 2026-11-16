@@ -73,6 +73,8 @@ class PokemonStatDraftPC(PokemonStatDraft):
         self.form_title = tk.Label(settings, text=self.form_tr("title"), bg=COLORS["panel"], fg="#94a3b8",
                                    font=("Segoe UI", 8, "bold"))
         self.form_title.grid(row=0, column=2, sticky="w", padx=(6, 0))
+        self.category_title = tk.Label(settings, text=self.category_tr("title"), bg=COLORS["panel"], fg="#94a3b8", font=("Segoe UI", 8, "bold"))
+        self.category_title.grid(row=0, column=3, sticky="w", padx=(6, 0))
 
         self.type_button = tk.Button(settings, text=self.tr("types_all"), command=self.open_type_filter,
                                      bg=COLORS["blue"], fg="white", activebackground="#1d4ed8",
@@ -89,6 +91,8 @@ class PokemonStatDraftPC(PokemonStatDraft):
                                      activeforeground="white", relief="flat", bd=0, cursor="hand2",
                                      padx=3, pady=8, font=("Segoe UI", 8, "bold"))
         self.form_button.grid(row=1, column=2, sticky="ew", padx=(6, 0), pady=(3, 8))
+        self.category_button = tk.Button(settings, text=self.category_button_text(), command=self.open_category_filter, bg="#334155", fg="white", activebackground="#475569", activeforeground="white", relief="flat", bd=0, cursor="hand2", padx=3, pady=8, font=("Segoe UI", 8, "bold"))
+        self.category_button.grid(row=1, column=3, sticky="ew", padx=(6, 0), pady=(3, 8))
 
         self.mode_title = tk.Label(settings, text=self.tr("mode"), bg=COLORS["panel"], fg="#94a3b8",
                                    font=("Segoe UI", 8, "bold"))
